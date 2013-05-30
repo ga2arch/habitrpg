@@ -8,6 +8,8 @@ validator = require 'derby-auth/node_modules/validator'
 check = validator.check
 sanitize = validator.sanitize
 misc = require '../app/misc'
+require("date-format-lite")
+
 
 NO_TOKEN_OR_UID = err: "You must include a token and uid (user id) in your request"
 NO_USER_FOUND = err: "No user found."
@@ -123,7 +125,8 @@ validateTask = (req, res, next) ->
 
   newTask.text = sanitize(text).xss() if typeof text is "string"
   newTask.notes = sanitize(notes).xss() if typeof notes is "string"
-
+  newTask.timestamp = new Date().format('isoUtcDateTime')
+  
   switch type
     when 'habit'
       newTask.up = true unless typeof up is 'boolean'
