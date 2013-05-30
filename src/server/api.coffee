@@ -163,6 +163,7 @@ router.delete '/user/task/:id', auth, validateTask, (req, res) ->
 ###
 updateTasks = (tasks, user, model) ->
   for idx, task of tasks
+    task.timestamp = new Date().format('isoUtcDateTime')
     if task.id
       if task.del
         user.del "tasks.#{task.id}"
@@ -191,6 +192,7 @@ router.post '/user/tasks', auth, (req, res) ->
 router.post '/user/task', auth, validateTask, (req, res) ->
   task = req.task
   type = task.type
+  task.timestamp = new Date().format('isoUtcDateTime')
 
   model = req.getModel()
   model.ref '_user', req.user
@@ -225,7 +227,7 @@ scoreTask = (req, res, next) ->
   {taskId, direction} = req.params
   {title, service, icon, type} = req.body
   type ||= 'habit'
-
+  
   # Send error responses for improper API call
   return res.send(500, ':taskId required') unless taskId
   return res.send(500, ":direction must be 'up' or 'down'") unless direction in ['up','down']
@@ -236,6 +238,7 @@ scoreTask = (req, res, next) ->
   model.ref('_user', user)
 
   existingTask = model.at "_user.tasks.#{taskId}"
+  
   # TODO add service & icon to task
   # If task exists, set it's compltion
   if existingTask.get()
