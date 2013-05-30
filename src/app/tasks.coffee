@@ -3,6 +3,7 @@ helpers = require 'habitrpg-shared/script/helpers'
 _ = require 'lodash'
 moment = require 'moment'
 misc = require './misc'
+require("date-format-lite")
 
 
 ###
