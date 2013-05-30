@@ -19,7 +19,8 @@ module.exports.app = (appExports, model) ->
     return if /^(\s)*$/.test(text) || text == undefined
 
     activeFilters = _.reduce user.get('filters'), ((memo,v,k) -> memo[k]=v if v;memo), {}
-    newTask = {id: model.id(), type: type, text: text, notes: '', value: 0, tags: activeFilters}
+    t = new Date().format('isoUtcDateTime')
+    newTask = {id: model.id(), type: type, text: text, notes: '', value: 0, tags: activeFilters, timestamp: t}
     switch type
       when 'habit'
         newTask = _.defaults {up: true, down: true}, newTask
